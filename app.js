@@ -1,5 +1,5 @@
 import express from "express";
-import configRoutes from "./routes/configRoutes.js";
+import configRoutes from "./routs/configRoutes.js";
 
 const app = express()
 app.use(express.json())//אפשרות לשרת לפרש את גוף הבקשה

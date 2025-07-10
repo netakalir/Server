@@ -5,7 +5,7 @@ import {
     updateriddle,
     deleteriddle
 
- } from "../controllers/riddleCtrl";
+ } from "../controllers/riddleCtrl.js";
 
  const router = express.Router()//יצירת ראוטר שמקבל נתיבים מקומיים
 
