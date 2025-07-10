@@ -10,11 +10,5 @@
     "name": "how",
     "taskDescription": "how read this app ?",
     "correctAnswer": "neta"
-  },
-  {
-    "id": 1752162758551,
-    "name": "math",
-    "taskDescription": "how much is 5 + 2 ?",
-    "correctAnswer": 7
   }
 ]
