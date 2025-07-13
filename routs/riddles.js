@@ -14,4 +14,5 @@ import {
  router.put("/updateRiddle/:id",updateriddle)//עדכון על ידי מזהה חידה קיימת
  router.delete("/deleteRiddle/:id",deleteriddle)//מחיקת על ידי מזהה חידה קייימת
  
+ 
  export default router
