@@ -36,7 +36,7 @@ export async function readDBPlayers(){
 export async function writeDBPlayers(data){
     try {
         const players = JSON.stringify(data,null,2)
-        await fs.writeFile(DbPath,players,"utf-8")
+        await fs.writeFile(DbPlayerPath,players,"utf-8")
     } catch (error) {
         console.log(error);
     }
