@@ -1,4 +1,4 @@
-import { readDBPlayers, writeDBPlayers } from "../DAL/fs.dal.js";
+import { readDBPlayers, writeDBPlayers } from "../DAL/mogoDal.js";
 
 export async function getAllPlayers(req, res) {
     try {
