@@ -10,25 +10,37 @@ export async function getAllPlayers(req, res) {
 }
 
 export async function recordTime(req, res) {
-  const players = await readDBPlayers();
-  const playerId = parseInt(req.params.id);
+    const players = await readDBPlayers();
+    const playerId = parseInt(req.params.id);
+    const playerIndex = players.findIndex(p => p.id === playerId);
+    // בדיקה אם השחקן קיים
+    if (playerIndex === -1) {
+        return res.status(404).json({ msg: "player not found" });
+    }
+    const newTime = parseFloat(req.body.seconds);
+    //בדיקה אם זה מספר
+    if (isNaN(newTime)) {
+        return res.status(400).json({ msg: "invalid time" });
+    }
+    // ודא שקיים שדה times שהוא מערך
+    if (!Array.isArray(players[playerIndex].times)) {
+        players[playerIndex].times = [];
+    }
+    // דחיפת זמן חדש
+    players[playerIndex].times.push(newTime);
+    await writeDBPlayers(players);
+    res.json({ msg: "player updated", newPlayer: players[playerIndex] });
 
-  const playerIndex = players.findIndex(p => p.id === playerId);
+}
 
-  // בדיקה אם השחקן קיים
-  if (playerIndex === -1) {
-    return res.status(404).json({ msg: "player not found" });
-  }
+export async function getUserByName(req, res) {
+    const name = req.params.name;
+    const players = await readDBPlayers();
+    const player = players.find(p => p.name.toLowerCase() === name.toLowerCase());
 
-  // ודא שקיים שדה times שהוא מערך
-  if (!Array.isArray(players[playerIndex].times)) {
-    players[playerIndex].times = [];
-  }
+    if (!player) {
+        return res.status(404).json({ msg: "player not found" });
+    }
 
-  // דחיפת זמן חדש
-  players[playerIndex].times.push(req.body.seconds);
-
-  await writeDBPlayers(players);
-
-  res.json({ msg: "player updated", newPlayer: players[playerIndex] });
+    res.json(player); //  שליחה ישירה של השחקן כולל id
 }
