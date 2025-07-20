@@ -1,49 +1,48 @@
-import { readDBFile,writeDBFile } from "../DAL/fs.dal.js";
+import {
+    getAllRiddlesDAL,
+    createRiddleDAL,
+    updateRiddleDAL,
+    deleteRiddleDAL,
+    getRiddleByIdDAL
+} from "../DAL/mongoDal.js"
 
 export async function getAllRiddles(req, res) {
     try {
-        const riddles = await readDBFile()
-        res.json({ msg: "--- all riddles ---", riddles })
+        const result = await getAllRiddlesDAL()
+        res.json({ msg: "--- all riddles ---", riddles:result })
     } catch (error) {
-        res.status(500).json({ msg: "Failed to read riddles", error: error.message });
+        res.status(404).json({ msg: "Err: riddles not found", error: error.message })
     }
 }
 
 export async function createRiddle(req, res) {
-    const riddles = await readDBFile();
-    const newRiddle = { id: Date.now(), name: req.body.name, taskDescription: req.body.taskDescription, correctAnswer: req.body.correctAnswer }
-    riddles.push(newRiddle)
-    await writeDBFile(riddles);
-    res.status(201).json({ msg: "new riddle added", riddle: newRiddle });
-}
-
-export async function updateriddle(req, res) {
-    const riddles = await readDBFile();
-    const riddleId = parseInt(req.params.id)
-    const riddleIndex = riddles.findIndex(r => r.id === riddleId)
-    if (riddleIndex) {
-        riddles.splice(riddleIndex, 1)
-        const newRiddle = { id: riddleId, name: req.body.name, taskDescription: req.body.taskDescription, correctAnswer: req.body.correctAnswer }
-        riddles.push(newRiddle)
-        await writeDBFile(riddles)
-        res.json({ msg: "riddle updated", newRiddle })
-    }
-    else{
-        res.status(404).json({ msg: "riddle not found" })
+    try {
+        const { name, taskDescription, correctAnswer } = req.body
+        const riddle = await createRiddleDAL({
+            name, taskDescription, correctAnswer
+        })
+        res.json({ msg: "--- riddle created ---" }, riddle)
+    } catch (error) {
+        res.ststus(500).json({ msg: "Err: Failed to create riddle", error: error.message })
     }
 }
 
-export async function deleteriddle(req,res) {
-    const riddles = await readDBFile();
-    const riddleId = parseInt(req.params.id)
-    const riddleIndex = riddles.findIndex(r => r.id === riddleId)
-    if(riddleIndex !== -1){
-        riddles.splice(riddleIndex, 1)
-        await writeDBFile(riddles)
-        res.json({ msg: "riddle deleted successfully" })
-    }
-    else{
-        res.status(404).json({ msg: "riddle not found" })
+export async function updateRiddle(req, res) {
+    try {
+        const riddle = await getRiddleByIdDAL(req.params.id)
+        await updateRiddleDAL(riddle._id,req.body)
+        res.json({ msg: "--- riddle updated ---" })
+    } catch (error) {
+        res.status(500).json({ msg: "Failed to update riddle", error: error.message });
     }
 }
 
+export async function deleteRiddle(req, res) {
+    try {
+        const riddle = await getRiddleByIdDAL(req.params.id)
+        await deleteRiddleDAL(riddle._id)
+        res.json({ msg: "--- riddle delete ---" })
+    } catch (error) {
+        res.status(500).json({ msg: "Failed to delelte riddle", error: error.message });
+    }
+}
