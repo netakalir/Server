@@ -19,7 +19,7 @@ export async function getPlayerByNameDal(playerName) {
         .single()
     if (error) {
         return error;
-    } 
+    }
     return data
 }
 
@@ -58,5 +58,14 @@ export async function recordTimeDal(id, seconds) {
         throw error
     }
     return data
+}
+export async function getTimes() {
+    const { data, error } = await supabase
+        .from("players")
+        .select("name,times")
 
+    if (error) {
+        console.log(error);
+    }
+    return data
 }
