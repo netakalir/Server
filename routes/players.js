@@ -6,11 +6,11 @@ import {
     getBestTime
 } from "../controllers/playerCtrl.js";
 
-const router = express.Router()//יצירת ראוטר שמקבל נתיבים מקומיים
+const router = express.Router() // creates router for local routes
 
-router.get("/getAllplayers", getAllPlayers)//שליפה של כל השחקנים
-router.put("/:id/recordTime", recordTime)//עדכון על ידי מזהה שחקן קיים
-router.post("/getPlayer/:playerName",getPlayer)
-router.get("/getBestPlayer",getBestTime)
+router.get("/getAllplayers", getAllPlayers) // get all players
+router.put("/:id/recordTime", recordTime) // update by existing player ID
+router.post("/getPlayer/:playerName",getPlayer) // get or create player by name
+router.get("/getBestPlayer",getBestTime) // get best player time
 
 export default router

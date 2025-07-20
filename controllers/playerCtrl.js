@@ -6,6 +6,7 @@ import {
     getTimes
 } from "../DAL/supabaseDal.js";
 
+// returns all players from database
 export async function getAllPlayers(req, res) {
     try {
         const players = await getAllPlayersDal()
@@ -15,6 +16,7 @@ export async function getAllPlayers(req, res) {
     }
 }
 
+// creates new player or returns existing one
 export async function getPlayer(req, res) {
     try {
         const player = {
@@ -35,6 +37,7 @@ export async function getPlayer(req, res) {
     }
 }
 
+// records completion time for a player
 export async function recordTime(req, res) {
     try {
         const time = await recordTimeDal(req.params.id, req.body.times)
@@ -44,6 +47,7 @@ export async function recordTime(req, res) {
     }
 }
 
+// calculates and returns the best player time
 export async function getBestTime(req, res) {
     try {
         const result = await getTimes()

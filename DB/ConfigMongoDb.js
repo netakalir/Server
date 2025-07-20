@@ -13,6 +13,8 @@ let db = null;
 /**
  * @returns {Promise<Db>}
  */
+
+// connects to MongoDB database and returns instance
 export async function connect() {
     if (!db) {
         await client.connect();
