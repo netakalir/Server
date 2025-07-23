@@ -53,6 +53,14 @@ export async function getBestTime(req, res) {
         const result = await getTimes()
         let min = result[0].times;
         let name = result[0].name;
+        let data = `name: ${name}, times:${min}`;
+        for (let i = 1; i < result.length; i++) {
+            if (result[i].times < min) {
+            min = result[i].times
+            name = result[i].name
+            }
+            data += `\nname: ${result[i].name}, times:${result[i].times}\n`;
+        }
         for (let i = 1; i < result.length; i++) {
             if (result[i].times < min) {
                 min = result[i].times
@@ -60,7 +68,7 @@ export async function getBestTime(req, res) {
             }
         }
         let bestTime = min.reduce((sum, current) => sum + current, 0);
-        res.json({ msg: `the best player is: ${name} and total time is: ${bestTime}` })
+        res.json({ data ,msg: `the best player is: ${name} and total time is: ${bestTime} seconds`})
 
     } catch (error) {
         console.error(error);
