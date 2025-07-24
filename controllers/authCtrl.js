@@ -1,5 +1,5 @@
 import { hashPassword, generateToken, verifyPassword } from "../utils/authUtils.js";
-import { getPlayerByNameDal, createPlayerDal } from "../DAL/supabaseDal.js"
+import { getPlayerByNameDal, createPlayerDal } from "../DAL/supabaseDal.js";
 
 export async function register(req, res) {//פונקציית התחברות
     console.log("register");
@@ -12,12 +12,12 @@ export async function register(req, res) {//פונקציית התחברות
         }//בדיקה אם לא קיים כזה שחקן
         const hashdPassword = await hashPassword(password)//הצפנת הסיסמה שלו
         const newPlayer = {
-            name: req.body.name,
+            name: name,
             password: hashdPassword,
             role: "user",
             times: []
         }//יצירת אוביקט השחקן שישלח למסד הנתונים
-        console.log("newPlayer",newPlayer);
+        console.log(newPlayer);
         const player = await createPlayerDal(newPlayer)
         res.status(201).json({ message: "player created successfully",player });
     } catch (error) {
@@ -29,7 +29,7 @@ export async function login(req, res) {//פונקציית התחברות
     try {
         console.log("login");
         const { name, password } = req.body//שליפת נתונים מגוף הבקשה
-        const player = await getPlayerByNameDalAlt(name);
+        const player = await getPlayerByNameDal(name);
         if (!player) {
             return res.status(401).json({ error: "Invalid credentials" })
         }//בדיקה אם קיים כזה שחקן במסד נתונים

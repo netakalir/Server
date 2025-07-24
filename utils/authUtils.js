@@ -6,7 +6,8 @@ import { config } from 'dotenv';
 export async function hashPassword(password) {
     let hashPassword;
     try {
-        hashPassword = bcrypt.hash(password, 10)
+        hashPassword = await bcrypt.hash(password, 10)
+        console.log("hashPassword",hashPassword);
     } catch (error) {
         console.log({ msg: "cannt hashPassword ", error });
     }
