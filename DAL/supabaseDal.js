@@ -20,7 +20,7 @@ export async function getPlayerByNameDal(playerName) {
         .eq("name", playerName)
         .single()
     if (error) {
-        return error;
+        return undefined;
     }
     return data
 }

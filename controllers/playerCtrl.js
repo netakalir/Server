@@ -5,6 +5,7 @@ import {
     getPlayerByNameDal,
     getTimes
 } from "../DAL/supabaseDal.js";
+import bcrypt from "bcrypt"
 
 // returns all players from database
 export async function getAllPlayers(req, res) {
@@ -21,6 +22,8 @@ export async function getPlayer(req, res) {
     try {
         const player = {
             name: req.params.playerName,
+            role: "user",
+            password : await bcrypt.hash(password, 10),
             times: []
         }
         const isExist = await getPlayerByNameDal(req.params.playerName);
@@ -56,8 +59,8 @@ export async function getBestTime(req, res) {
         let data = `name: ${name}, times:${min}`;
         for (let i = 1; i < result.length; i++) {
             if (result[i].times < min) {
-            min = result[i].times
-            name = result[i].name
+                min = result[i].times
+                name = result[i].name
             }
             data += `\nname: ${result[i].name}, times:${result[i].times}\n`;
         }
@@ -68,7 +71,7 @@ export async function getBestTime(req, res) {
             }
         }
         let bestTime = min.reduce((sum, current) => sum + current, 0);
-        res.json({ data ,msg: `the best player is: ${name} and total time is: ${bestTime} seconds`})
+        res.json({ data, msg: `the best player is: ${name} and total time is: ${bestTime} seconds` })
 
     } catch (error) {
         console.error(error);
