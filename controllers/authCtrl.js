@@ -1,26 +1,25 @@
 import { hashPassword, generateToken, verifyPassword } from "../utils/authUtils.js";
-import { getPlayerByNameDal, createPlayerDal } from "../DAL/supabaseDal.js";
+import { getPlayerByNameDal, createPlayerDal } from "../DAL/supabaseDal.js"
 
 export async function register(req, res) {//פונקציית התחברות
     console.log("register");
     try {
         const { name, password } = req.body//שליפת נתונים מגוף הבקשה
         const existingPlayer = await getPlayerByNameDal(name);
-        if(existingPlayer){
-            console.log(1);
-        }
+        // console.log(existingPlayer);
         if (existingPlayer) {
             return res.status(400).json("player already exists");
         }//בדיקה אם לא קיים כזה שחקן
         const hashdPassword = await hashPassword(password)//הצפנת הסיסמה שלו
         const newPlayer = {
-            name: name,
+            name: req.body.name,
             password: hashdPassword,
             role: "user",
             times: []
         }//יצירת אוביקט השחקן שישלח למסד הנתונים
-        await createPlayerDal(newPlayer)
-        res.status(201).json({ message: "player created successfully" });
+        console.log("newPlayer",newPlayer);
+        const player = await createPlayerDal(newPlayer)
+        res.status(201).json({ message: "player created successfully",player });
     } catch (error) {
         res.status(401).json({ eroor: "cannot register", error })
     }
@@ -28,8 +27,9 @@ export async function register(req, res) {//פונקציית התחברות
 
 export async function login(req, res) {//פונקציית התחברות
     try {
+        console.log("login");
         const { name, password } = req.body//שליפת נתונים מגוף הבקשה
-        const player = await getPlayerByNameDal(name);
+        const player = await getPlayerByNameDalAlt(name);
         if (!player) {
             return res.status(401).json({ error: "Invalid credentials" })
         }//בדיקה אם קיים כזה שחקן במסד נתונים
