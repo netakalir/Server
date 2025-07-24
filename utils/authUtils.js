@@ -3,16 +3,16 @@ import jwt from "jsonwebtoken"
 import { config } from 'dotenv';
 
 
-export async function hashPassword(password) {
-    let hashPassword;
+export async function hashPassword(password,salt) {
+    let hash;
     try {
-        hashPassword = await bcrypt.hash(password, 10)
-        console.log("hashPassword",hashPassword);
+        hash = await bcrypt.hash(password, salt)
     } catch (error) {
         console.log({ msg: "cannt hashPassword ", error });
     }
-    return hashPassword;
+    return hash;
 }
+
 
 export async function verifyPassword(password, hash) {
     try {

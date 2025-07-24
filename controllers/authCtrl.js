@@ -6,20 +6,18 @@ export async function register(req, res) {//פונקציית התחברות
     try {
         const { name, password } = req.body//שליפת נתונים מגוף הבקשה
         const existingPlayer = await getPlayerByNameDal(name);
-        // console.log(existingPlayer);
         if (existingPlayer) {
             return res.status(400).json("player already exists");
         }//בדיקה אם לא קיים כזה שחקן
-        const hashdPassword = await hashPassword(password)//הצפנת הסיסמה שלו
+        const hash = await hashPassword(password,10)//הצפנת הסיסמה שלו
         const newPlayer = {
             name: name,
-            password: hashdPassword,
+            password: hash,
             role: "user",
             times: []
         }//יצירת אוביקט השחקן שישלח למסד הנתונים
-        console.log(newPlayer);
         const player = await createPlayerDal(newPlayer)
-        res.status(201).json({ message: "player created successfully",player });
+        res.status(201).json({ message: "player created successfully" });
     } catch (error) {
         res.status(401).json({ eroor: "cannot register", error })
     }
