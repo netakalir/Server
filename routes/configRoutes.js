@@ -1,9 +1,7 @@
 import riddleRouter from "./riddles.js"
 import playerRouter from "./players.js"
 import authRouter from "./auth.js"
-function f() {
-    console.log("fdbdf");
-}
+
 // configures all application routes
 export default function (app) {
     app.use("/auth", authRouter)
@@ -11,6 +9,6 @@ export default function (app) {
     app.use("/players", playerRouter) // routes player requests to player 
 
     app.use((req, res) => { // error if no matching route found
-        res.status(404).json({ msg: "route not found" })
+        res.status(404).json({ msg: "route not found || or methoed is'nt right" })
     })
 }

@@ -26,9 +26,9 @@ export async function verifyPassword(password, hash) {
     }
 }
 
-export function generateToken(player) {
+export async function generateToken(player) {
     try {
-        const token = jwt.sign(
+        const token =  jwt.sign(
             {
                 name: player.name,
                 role: player.role,
@@ -37,14 +37,16 @@ export function generateToken(player) {
             process.env.JWT_SECRET,
             { expiresIn: "2h" }
         )
+        console.log("Generated token:", token);
         return token
     } catch (error) {
         console.log(error);
+        return null
     }
 
 }
 
-export function verifyToken(token) {
+export async function  verifyToken(token) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded;

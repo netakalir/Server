@@ -5,13 +5,15 @@ import {
 export function authenticatePlayer(allowedRoles) {//פונקציה שתקבל מערך של שחקנים מורשים ותפקידה יהיה לאמת אותם
     return async (req, res, next) => {
         try {
-            const token = req.body.token;//שליפה של הטוקן מתוך גוף התשובה 
+            const authHeader = req.headers["authorization"];
+            const token = authHeader && authHeader.split(" ")[1]; 
 
             if (!token) {
                 return res.status(401).json({ error: "no token provided" });//בדיקה אם קיים טוקן
             }
 
-            const player = verifyToken(token);//שליחה לפונקציה שתאמת את הטוקן
+            const player = await verifyToken(token);//שליחה לפונקציה שתאמת את הטוקן
+            console.log("player:>",player);
 
             if (!player) {
                 return res.status(401).json({ error: "invalid or expired token" });//תגובה אם הטוקן לא מאושר
