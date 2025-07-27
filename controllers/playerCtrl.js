@@ -20,23 +20,17 @@ export async function getAllPlayers(req, res) {
 // creates new player or returns existing one
 export async function getPlayer(req, res) {
     try {
-        const player = {
-            name: req.params.playerName,
-            role: "user",
-            password : await bcrypt.hash(password, 10),
-            times: []
-        }
         const isExist = await getPlayerByNameDal(req.params.playerName);
-        if (!isExist?.code) {
-            res.json({ msg: "player allready exsist", newPlayer: isExist })
-        }
-        else {
-            const newPlayer = await createPlayerDal(player)
-            res.json({ msg: "player created", newPlayer })
+        console.log("isExist", isExist);
+
+        if (isExist) {
+            return res.json({ msg: "player found", player: isExist });
+        } else {
+            return res.status(404).json({ msg: "player not found" });
         }
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error })
+        return res.status(500).json({ error: "server error" });
     }
 }
 

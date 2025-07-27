@@ -16,7 +16,7 @@ export async function hashPassword(password,salt) {
 
 export async function verifyPassword(password, hash) {
     try {
-        const status = bcrypt.compare(password, hash)
+        const status = await bcrypt.compare(password, hash)
         if (!status) {
             return false
         }
@@ -37,7 +37,6 @@ export async function generateToken(player) {
             process.env.JWT_SECRET,
             { expiresIn: "2h" }
         )
-        console.log("Generated token:", token);
         return token
     } catch (error) {
         console.log(error);

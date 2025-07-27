@@ -13,8 +13,7 @@ export function authenticatePlayer(allowedRoles) {//פונקציה שתקבל מ
             }
 
             const player = await verifyToken(token);//שליחה לפונקציה שתאמת את הטוקן
-            console.log("player:>",player);
-
+            
             if (!player) {
                 return res.status(401).json({ error: "invalid or expired token" });//תגובה אם הטוקן לא מאושר
             }

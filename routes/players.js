@@ -10,7 +10,7 @@ const router = express.Router() // creates router for local routes
 
 router.get("/getAllplayers", getAllPlayers) // get all players
 router.put("/:id/recordTime", recordTime) // update by existing player ID
-router.post("/getPlayer/:playerName",getPlayer) // get or create player by name
+router.get("/getPlayer/:playerName",getPlayer) // get or create player by name
 router.get("/getBestPlayer",getBestTime) // get best player time
 
 export default router
