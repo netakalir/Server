@@ -6,6 +6,7 @@ import {
     getRiddleByIdDAL
 } from "../DAL/mongoDal.js"
 
+// returns all riddles from database
 export async function getAllRiddles(req, res) {
     try {
         const result = await getAllRiddlesDAL()
@@ -15,6 +16,7 @@ export async function getAllRiddles(req, res) {
     }
 }
 
+// creates a new riddle in database
 export async function createRiddle(req, res) {
     try {
         const { name, taskDescription, correctAnswer } = req.body
@@ -23,10 +25,11 @@ export async function createRiddle(req, res) {
         })
         res.json({ msg: "--- riddle created ---" }, riddle)
     } catch (error) {
-        res.ststus(500).json({ msg: "Err: Failed to create riddle", error: error.message })
+        res.status(500).json({ msg: "Err: Failed to create riddle", error: error.message })
     }
 }
 
+// updates an existing riddle by ID
 export async function updateRiddle(req, res) {
     try {
         const riddle = await getRiddleByIdDAL(req.params.id)
@@ -37,6 +40,7 @@ export async function updateRiddle(req, res) {
     }
 }
 
+// deletes a riddle by ID
 export async function deleteRiddle(req, res) {
     try {
         const riddle = await getRiddleByIdDAL(req.params.id)

@@ -5,7 +5,9 @@ import {
     getPlayerByNameDal,
     getTimes
 } from "../DAL/supabaseDal.js";
+import bcrypt from "bcrypt"
 
+// returns all players from database
 export async function getAllPlayers(req, res) {
     try {
         const players = await getAllPlayersDal()
@@ -15,26 +17,24 @@ export async function getAllPlayers(req, res) {
     }
 }
 
+// creates new player or returns existing one
 export async function getPlayer(req, res) {
     try {
-        const player = {
-            name: req.params.playerName,
-            times: []
-        }
         const isExist = await getPlayerByNameDal(req.params.playerName);
-        if (!isExist?.code) {
-            res.json({ msg: "player allready exsist", newPlayer: isExist })
-        }
-        else {
-            const newPlayer = await createPlayerDal(player)
-            res.json({ msg: "player created", newPlayer })
+        console.log("isExist", isExist);
+
+        if (isExist) {
+            return res.json({ msg: "player found", player: isExist });
+        } else {
+            return res.status(404).json({ msg: "player not found" });
         }
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error })
+        return res.status(500).json({ error: "server error" });
     }
 }
 
+// records completion time for a player
 export async function recordTime(req, res) {
     try {
         const time = await recordTimeDal(req.params.id, req.body.times)
@@ -44,11 +44,20 @@ export async function recordTime(req, res) {
     }
 }
 
+// calculates and returns the best player time
 export async function getBestTime(req, res) {
     try {
         const result = await getTimes()
         let min = result[0].times;
         let name = result[0].name;
+        let data = `name: ${name}, times:${min}`;
+        for (let i = 1; i < result.length; i++) {
+            if (result[i].times < min) {
+                min = result[i].times
+                name = result[i].name
+            }
+            data += `\nname: ${result[i].name}, times:${result[i].times}\n`;
+        }
         for (let i = 1; i < result.length; i++) {
             if (result[i].times < min) {
                 min = result[i].times
@@ -56,7 +65,7 @@ export async function getBestTime(req, res) {
             }
         }
         let bestTime = min.reduce((sum, current) => sum + current, 0);
-        res.json({ msg: `the best player is: ${name} and total time is: ${bestTime}` })
+        res.json({ data, msg: `the best player is: ${name} and total time is: ${bestTime} seconds` })
 
     } catch (error) {
         console.error(error);
